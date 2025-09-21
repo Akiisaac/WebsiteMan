@@ -1,0 +1,45 @@
+/* ========================================
+   SOCIAL LINKS COMPONENTS
+   ======================================== */
+
+.researcher-name {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+  text-align: center;
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+}
+
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all var(--transition-normal);
+  border: 1px solid var(--border-color);
+}
+
+.social-link:hover {
+  background: var(--accent-primary);
+  color: var(--text-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 158, 255, 0.3);
+}
+
+.social-link svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}

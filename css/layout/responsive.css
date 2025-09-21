@@ -2,21 +2,43 @@
    RESPONSIVE DESIGN
    ======================================== */
 
-/* Tablet (768px and below) */
+/* Mobile and Tablet (768px and below) */
 @media (max-width: 768px) {
   :root {
-    --spacing-xxl: 3rem;
-    --spacing-xl: 2rem;
+    --spacing-xxl: 2rem;
+    --spacing-xl: 1.5rem;
+  }
+  
+  .homepage {
+    padding: var(--spacing-lg) 0;
+    background: var(--bg-primary);
   }
   
   .homepage-content {
-    grid-template-columns: 1fr;
-    gap: var(--spacing-xl);
+    display: block !important;
     text-align: center;
   }
   
+  .profile-section {
+    margin-bottom: var(--spacing-xl);
+    width: 100%;
+    background: var(--bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+  }
+  
   .profile-image {
-    max-width: 300px;
+    max-width: 300px !important;
+    width: 80% !important;
+    margin: 0 auto !important;
+    display: block !important;
+  }
+  
+  .bio-section {
+    width: 100%;
+    background: var(--bg-secondary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
   }
   
   h1 {
@@ -25,11 +47,30 @@
   
   .bio-text {
     font-size: 1rem;
+    text-align: justify;
+  }
+  
+  .researcher-name {
+    font-size: 1.25rem;
+  }
+  
+  .social-links {
+    gap: var(--spacing-sm);
+  }
+  
+  .social-link {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .social-link svg {
+    width: 18px;
+    height: 18px;
   }
 }
 
-/* Mobile (375px and below) */
-@media (max-width: 375px) {
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
   .container {
     padding: 0 var(--spacing-sm);
   }
@@ -39,7 +80,9 @@
   }
   
   .profile-image {
-    max-width: 250px;
+    max-width: 280px;
+    margin: 0 auto var(--spacing-lg) auto;
+    display: block;
   }
   
   h1 {
@@ -48,6 +91,25 @@
   
   .bio-text {
     font-size: 0.95rem;
+    text-align: justify;
+  }
+  
+  .researcher-name {
+    font-size: 1.1rem;
+  }
+  
+  .social-links {
+    gap: var(--spacing-xs);
+  }
+  
+  .social-link {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .social-link svg {
+    width: 16px;
+    height: 16px;
   }
   
   .btn {
