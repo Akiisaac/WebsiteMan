@@ -1,0 +1,171 @@
+# Development Guide for Cursor AI
+
+## Project Overview
+You are helping build a simple research blogging website based on the PRD provided. This guide explains HOW to approach development, not what to build (that's in the PRD).
+
+## Core Development Principles
+
+### 1. INCREMENTAL DEVELOPMENT
+- **Build ONE component at a time**
+- **Always get approval before moving to the next step**
+- **Never assume requirements - always ask for clarification**
+- **Start with basic functionality, then enhance**
+
+### 2. TECHNOLOGY CONSTRAINTS
+- **ONLY use**: HTML5, CSS3, Vanilla JavaScript
+- **NO frameworks**: No React, Vue, Angular, jQuery, etc.
+- **NO backend**: Everything must work client-side
+- **NO external APIs**: Keep it self-contained
+- **GitHub Pages compatible**: Static files only
+
+### 3. STEP-BY-STEP APPROACH
+
+#### Phase 1: Foundation
+1. Create basic file structure
+2. Build homepage (about page) with static content
+3. Get approval before proceeding
+
+#### Phase 2: Blog Menu
+1. Create blog menu page with dummy data
+2. Implement responsive grid/list layout
+3. Test on different screen sizes
+4. Get approval before proceeding
+
+#### Phase 3: Individual Blog Posts
+1. Create template for individual blog post pages
+2. Implement navigation between menu and posts
+3. Test with sample content
+4. Get approval before proceeding
+
+#### Phase 4: Admin Panel - Basic
+1. Create admin login page
+2. Build basic admin interface layout
+3. Get approval before proceeding
+
+#### Phase 5: Admin Panel - Functionality
+1. Implement blog post creation form
+2. Add localStorage for draft saving
+3. Test creation workflow
+4. Get approval before proceeding
+
+#### Phase 6: Content Management
+1. Add edit and delete functionality
+2. Implement image upload handling
+3. Test complete admin workflow
+4. Get approval before proceeding
+
+#### Phase 7: Publishing System
+1. Build export/publish functionality
+2. Create final static files generation
+3. Test complete workflow
+4. Final testing and refinement
+
+## Communication Guidelines
+
+### Always Ask Before:
+- Moving to the next development phase
+- Making architectural decisions
+- Adding features not explicitly mentioned
+- Changing the file structure
+- Implementing complex functionality
+
+### When Providing Code:
+- **Show complete files**, not just snippets
+- **Explain what each piece does**
+- **Highlight any assumptions made**
+- **Point out potential issues or limitations**
+- **Suggest testing steps**
+
+### If Stuck or Uncertain:
+- **Stop and ask for clarification**
+- **Explain the specific problem**
+- **Offer 2-3 possible solutions**
+- **Wait for guidance before proceeding**
+
+## Code Quality Standards
+
+### HTML
+- Use semantic HTML5 elements
+- Proper document structure
+- Accessibility considerations (alt tags, proper headings)
+- Clean, readable formatting
+
+### CSS
+- Mobile-first responsive design
+- Clean, organized stylesheets
+- Use CSS Grid/Flexbox for layouts
+- Consistent naming conventions
+- Comments for complex sections
+
+### JavaScript
+- Vanilla JS only - no libraries
+- Clear, readable variable names
+- Proper error handling
+- Comments for complex logic
+- Modular, reusable functions
+
+## File Structure Requirements
+```
+/
+├── index.html (homepage)
+├── blog/
+│   ├── index.html (blog menu)
+│   └── posts/ (individual blog posts)
+├── admin/
+│   └── index.html (admin interface)
+├── css/
+│   └── styles.css
+├── js/
+│   ├── main.js
+│   └── admin.js
+├── images/
+│   ├── profile/
+│   └── blog/
+└── data/
+    └── blogs.json
+```
+
+## Testing Requirements
+- Test on desktop (1920px, 1366px)
+- Test on tablet (768px)
+- Test on mobile (375px, 320px)
+- Test in Firefox
+- Test all admin functionality
+- Test image uploads and display
+- Test responsive layouts
+
+## Common Pitfalls to Avoid
+- **Don't build everything at once** - work incrementally
+- **Don't assume requirements** - ask questions
+- **Don't use complex solutions** - keep it simple
+- **Don't skip testing** - verify each step works
+- **Don't move forward without approval** - wait for feedback
+
+## Success Criteria for Each Phase
+Each phase should be:
+- ✅ Fully functional for its scope
+- ✅ Tested on multiple screen sizes
+- ✅ Clean, readable code
+- ✅ Properly documented
+- ✅ Approved before moving forward
+
+## Emergency Stops
+Stop development immediately if:
+- Requirements become unclear
+- Technical limitations are discovered
+- Code becomes overly complex
+- Testing reveals major issues
+- User provides conflicting information
+
+**Wait for clarification before continuing.**
+
+---
+
+## Remember: 
+- **Quality over speed**
+- **Communication over assumptions**
+- **Simple solutions over complex ones**
+- **Working code over perfect code**
+- **User approval over developer preferences**
+
+This is a collaborative process - you're the technical expert, but the user knows what they want. Work together to build something great!

@@ -1,0 +1,46 @@
+/* ========================================
+   LANDING PAGE COMPONENTS
+   ======================================== */
+
+.homepage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.homepage-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: var(--spacing-xxl);
+  align-items: center;
+  width: 100%;
+}
+
+.profile-section {
+  text-align: center;
+}
+
+.profile-image {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border-color);
+  box-shadow: 0 4px 16px var(--shadow-color);
+}
+
+.bio-section {
+  padding: var(--spacing-lg);
+}
+
+.bio-title {
+  color: var(--accent-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+.bio-text {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: var(--spacing-xl);
+}

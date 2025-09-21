@@ -1,0 +1,244 @@
+# Research Blog Website - Product Requirements Document
+
+## 1. Project Overview
+
+### 1.1 Product Vision
+A simple, clean blogging website designed for a PhD student to showcase research papers and documentation to academic peers and interested readers.
+
+### 1.2 Target Audience
+- Primary: Academic researchers, fellow PhD students, and professionals in the field
+- Secondary: General public interested in the research area
+
+### 1.3 Business Objectives
+- Provide a professional platform for sharing research work
+- Increase visibility and accessibility of research papers
+- Establish online academic presence
+
+## 2. Functional Requirements
+
+### 2.1 Public Website Features
+
+#### 2.1.1 Homepage (About Page)
+**Layout:**
+- Left side: Profile picture of the PhD student
+- Right side: Biography/description text
+- Bottom: "Read Documentation" button
+
+**Requirements:**
+- Responsive design that works on desktop and mobile
+- Professional, academic aesthetic
+- Clear call-to-action button leading to blog section
+
+#### 2.1.2 Blog Menu Page
+**Desktop Layout:**
+- Grid format (3x3 layout recommended)
+- Each grid item contains:
+  - Thumbnail image
+  - Summary text (sufficient space for meaningful descriptions)
+  - "Read More" button
+
+**Mobile Layout:**
+- Vertical list format
+- Same content elements as desktop but stacked vertically
+
+#### 2.1.3 Individual Blog Post Page
+**Layout:**
+- Full page layout for detailed blog content
+- Blog title as main heading
+- Publication date and metadata
+- Full content with embedded images
+- Image gallery/carousel support for multiple images
+- External paper link (if available)
+- Navigation back to blog menu
+
+**Requirements:**
+- Clean, readable typography for academic content
+- Responsive design for all screen sizes
+- Proper image display and scaling
+- Print-friendly layout for academic use
+
+### 2.2 Admin Panel Features
+
+#### 2.2.1 Access
+- Accessible via `/admin/` folder or `/admin/index.html`
+- Simple password protection using JavaScript (client-side)
+- **Note**: For GitHub Pages limitations, true authentication requires manual file updates via Git
+
+#### 2.2.2 Blog Management
+**Create Blog Posts:**
+- **Rich web-based editor** with live preview
+- **Direct image upload** through admin interface (no manual GitHub uploads needed)
+- **Image management system** within the admin panel
+- Fields for:
+  - Title
+  - Summary/excerpt  
+  - Full content with WYSIWYG editing
+  - Thumbnail image upload (for blog menu display)
+  - Multiple content images upload and arrangement
+  - External paper link (optional)
+  - Publication date
+  - Tags/categories (optional)
+- **Auto-save functionality** to prevent data loss
+- **Publish/Draft status** control
+
+**Edit Blog Posts:**
+- Full editing interface with all creation features
+- **Live preview** of changes before publishing
+- **Image replacement/addition** capabilities
+- Version history (if feasible with client-side approach)
+
+**Delete Blog Posts:**
+- **Complete removal** including all associated images
+- Confirmation dialog with preview of what will be deleted
+- **Bulk delete** option for multiple posts
+
+## 3. Technical Requirements
+
+### 3.1 Core Technology
+- **Frontend Only**: HTML5, CSS3, and vanilla JavaScript
+- **Hosting**: GitHub Pages (static site hosting)
+- **Data Storage**: JSON files for blog content (no database required)
+- **Image Storage**: Local image files in repository
+- **No Backend**: All functionality implemented client-side
+
+### 3.2 Admin Panel Functionality
+- **Complete Content Management System** built with JavaScript
+- **File Upload Handling**: Direct image uploads processed client-side
+- **Data Persistence**: All changes saved to localStorage and exportable
+- **Content Generation**: Creates static HTML files for blog posts
+- **Image Processing**: Client-side image resizing and optimization
+
+### 3.3 Performance
+- Fast loading times for both desktop and mobile
+- Optimized images
+- Clean, minimal code structure
+
+## 4. User Experience Requirements
+
+### 4.1 Navigation
+- Intuitive flow from homepage to blog section
+- Clear visual hierarchy
+- Consistent design language throughout
+
+### 4.2 Accessibility
+- Mobile-responsive design
+- Fast loading times
+- Clean, readable typography
+- Proper contrast ratios
+
+### 4.3 Content Management
+- User-friendly admin interface
+- WYSIWYG editor for content creation
+- Easy image upload process
+
+## 5. Design Requirements
+
+### 5.1 Visual Design
+- Professional, academic aesthetic
+- Clean and minimal layout
+- Consistent color scheme and typography
+- High-quality image presentation
+
+### 5.2 Responsive Design
+- Seamless experience across desktop, tablet, and mobile
+- Grid to list transformation on smaller screens
+- Readable text at all screen sizes
+
+## 6. Content Requirements
+
+### 6.1 Homepage Content
+- Professional headshot
+- Comprehensive but concise biography
+- Academic credentials and research focus
+- Clear value proposition for visitors
+
+### 6.2 Blog Content Structure
+- Engaging thumbnails for blog menu
+- Informative summaries (50-150 words recommended)
+- Full research documentation with embedded images
+- **Image Gallery Support**: Multiple images per blog post with captions
+- Links to external papers/resources
+
+## 7. Success Metrics
+
+### 7.1 User Engagement
+- Time spent on site
+- Blog post views
+- External link clicks to full papers
+
+### 7.2 Content Management
+- Ease of admin usage
+- Frequency of content updates
+- Time to publish new content
+
+## 8. Technical Specifications
+
+### 8.1 GitHub Pages Hosting
+- **Repository Structure**: 
+  - `/index.html` (homepage)
+  - `/blog/` (blog menu page)
+  - `/admin/` (admin interface)
+  - `/data/` (JSON files for blog content)
+  - `/images/` (profile pictures and blog thumbnails)
+  - `/css/` (stylesheets)
+  - `/js/` (JavaScript files)
+
+### 8.2 Data Management & Admin System
+- **Client-Side CMS**: Full content management through web interface
+- **Local Storage**: Admin changes stored in browser localStorage
+- **Export/Import**: Ability to export content and sync with GitHub
+- **Image Handling**: 
+  - Direct upload through admin interface
+  - Client-side image processing and storage
+  - Automatic thumbnail generation
+  - Multiple images per blog post support
+- **Content Generation**: Admin panel generates static HTML files for each blog post
+
+### 8.3 Browser Support
+- Modern browsers with JavaScript enabled
+- Mobile browser compatibility
+- No server-side processing required
+
+## 9. Future Considerations
+
+### 9.1 Potential Enhancements
+- Search functionality for blog posts
+- Categories/tags for content organization
+- RSS feed for subscribers
+- Comment system (if desired)
+- Analytics integration
+
+### 9.2 Scalability
+- Structure should support growing content library
+- Admin panel should handle increasing number of posts efficiently
+
+## 10. Constraints and Assumptions
+
+### 10.1 Constraints
+- No user registration/login for public users
+- Single admin user (the PhD student)
+- Simple, cost-effective hosting solution
+
+### 10.2 Assumptions
+- Content will be primarily text-based with supporting images
+- Updates will be periodic rather than daily
+- Primary access will be from academic/professional networks
+
+## 11. Acceptance Criteria
+
+### 11.1 Public Site
+- ✅ Homepage displays profile and bio correctly
+- ✅ Blog menu shows all published posts in grid/list format
+- ✅ Site is fully responsive across devices
+- ✅ All links and buttons function properly
+
+### 11.2 Admin Panel
+- ✅ Secure login at `/admin-site` endpoint
+- ✅ Can create, edit, and delete blog posts
+- ✅ Rich content editing capabilities
+- ✅ Image upload functionality works
+- ✅ Changes reflect immediately on public site
+
+---
+
+*This PRD serves as the foundation for development and can be refined based on feedback and technical discoveries during the build process.*
