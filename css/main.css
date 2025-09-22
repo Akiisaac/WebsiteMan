@@ -16,6 +16,7 @@
 @import url('components/landing-page.css');
 @import url('components/social-links.css');
 @import url('components/blog-menu.css');
+@import url('components/blog-post.css');
 
 /* Utilities */
 @import url('utilities.css');

@@ -37,6 +37,9 @@ function getCurrentPage() {
     else if (path.includes('blog-menu.html')) {
         return 'blog-menu';
     }
+    else if (path.includes('/blog/posts/')) {
+        return 'blog-post';
+    }
     // Future pages can be added here
     // else if (path.includes('admin')) return 'admin';
     
@@ -56,6 +59,11 @@ function initializePageSpecific(page) {
         case 'blog-menu':
             if (window.BlogMenu) {
                 window.BlogMenu.initialize();
+            }
+            break;
+        case 'blog-post':
+            if (window.BlogPost) {
+                window.BlogPost.initialize();
             }
             break;
         // Future pages can be added here

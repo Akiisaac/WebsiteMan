@@ -181,4 +181,44 @@
     flex-direction: column;
     gap: var(--spacing-sm);
   }
+  
+  /* Blog Post Responsive Styles */
+  .blog-post {
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .post-title {
+    font-size: 1.5rem;
+  }
+  
+  .post-meta {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+  
+  .post-content {
+    font-size: 0.95rem;
+  }
+  
+  .post-content h2 {
+    font-size: 1.25rem;
+  }
+  
+  .post-content h3 {
+    font-size: 1.1rem;
+  }
+  
+  .external-links,
+  .file-attachments {
+    padding: var(--spacing-md);
+  }
+  
+  .links-container {
+    flex-direction: column;
+  }
+  
+  .attachment-link {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    font-size: 0.9rem;
+  }
 }

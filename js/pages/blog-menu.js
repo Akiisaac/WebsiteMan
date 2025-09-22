@@ -120,9 +120,9 @@ function createBlogCard(post) {
             <h2 class="blog-card-title">${post.title}</h2>
             <p class="blog-card-date">${formattedDate}</p>
             <p class="blog-card-summary">${post.summary}</p>
-            <button class="blog-card-button" onclick="showComingSoon('${post.title}')">
+            <a href="posts/${post.slug}.html" class="blog-card-button">
                 Read More
-            </button>
+            </a>
         </div>
     `;
 
