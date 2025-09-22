@@ -1,0 +1,85 @@
+{
+  "posts": [
+    {
+      "id": "1",
+      "title": "Behavioral Responses of Cabbage Aphids to Volatile Cues",
+      "summary": "Investigating how cabbage aphids respond to volatile cues emitted by plants under herbivory by conspecifics and heterospecifics. This study reveals fascinating insights into chemical communication in pest communities.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2024-01-15",
+      "published": true,
+      "slug": "cabbage-aphids-volatile-cues"
+    },
+    {
+      "id": "2", 
+      "title": "Push-Pull Strategy for Oilseed Rape Pest Management",
+      "summary": "Developing innovative push-pull strategies targeting cabbage stem flea beetle and grey field slug in oilseed rape crops. Exploring natural and synthetic lures and deterrents for environmentally friendly crop protection.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2024-01-10",
+      "published": true,
+      "slug": "push-pull-oilseed-rape-management"
+    },
+    {
+      "id": "3",
+      "title": "Synthetic HIPVs in Natural Enemy Recruitment",
+      "summary": "Exploring the effectiveness of synthetic herbivore-induced plant volatiles (HIPVs) in recruiting natural enemies for biological control. Field studies show promising results for integrated pest management approaches.",
+      "thumbnail": "../images/placeholder_image.png", 
+      "date": "2024-01-05",
+      "published": true,
+      "slug": "synthetic-hipvs-natural-enemies"
+    },
+    {
+      "id": "4",
+      "title": "Chemical Ecology of Plant-Herbivore Interactions",
+      "summary": "Understanding the complex chemical interactions that shape relationships between plants and their herbivores. This research provides insights into the evolutionary arms race between plants and pest species.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2023-12-28",
+      "published": true,
+      "slug": "chemical-ecology-plant-herbivore"
+    },
+    {
+      "id": "5",
+      "title": "Metarhizium brunneum Against Grey Field Slug Eggs",
+      "summary": "Investigating the ovicidal potential of Metarhizium brunneum against grey field slug (Deroceras reticulatum) eggs. Laboratory studies reveal promising biocontrol applications for slug management.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2023-12-20",
+      "published": true,
+      "slug": "metarhizium-slug-eggs"
+    },
+    {
+      "id": "6",
+      "title": "Semiochemical Applications for Slug Management",
+      "summary": "Developing semiochemical-based strategies for managing the grey field slug, a major pest of arable crops. Research focuses on environmentally sustainable alternatives to chemical pesticides.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2023-12-15",
+      "published": true,
+      "slug": "semiochemical-slug-management"
+    },
+    {
+      "id": "7",
+      "title": "Honey as Indicator of Heavy Metal Contamination",
+      "summary": "Using honey as a sustainable indicator of heavy metal loads in tropical rainforest vegetation. This innovative approach provides early warning monitoring for environmental contamination.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2023-12-10",
+      "published": true,
+      "slug": "honey-heavy-metal-indicator"
+    },
+    {
+      "id": "8",
+      "title": "Open Vertical Farms and Natural Pest Suppression",
+      "summary": "Exploring how open vertical farming systems can increase tomato yield while encouraging natural suppression of whiteflies. Sustainable agriculture approaches for urban farming.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2023-12-05",
+      "published": true,
+      "slug": "vertical-farms-pest-suppression"
+    },
+    {
+      "id": "9",
+      "title": "Plant Volatile-Mediated Communication Networks",
+      "summary": "Understanding how plants communicate through volatile organic compounds to coordinate defense responses. This research reveals the sophisticated chemical language of plant communities.",
+      "thumbnail": "../images/placeholder_image.png",
+      "date": "2023-11-30",
+      "published": true,
+      "slug": "plant-volatile-communication"
+    }
+  ]
+}

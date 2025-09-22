@@ -34,8 +34,10 @@ function getCurrentPage() {
     if (path.includes('landing-page.html') || path === '/' || path === '/index.html') {
         return 'landing-page';
     }
+    else if (path.includes('blog-menu.html')) {
+        return 'blog-menu';
+    }
     // Future pages can be added here
-    // else if (path.includes('blog')) return 'blog';
     // else if (path.includes('admin')) return 'admin';
     
     return 'unknown';
@@ -49,6 +51,11 @@ function initializePageSpecific(page) {
         case 'landing-page':
             if (window.LandingPage) {
                 window.LandingPage.initialize();
+            }
+            break;
+        case 'blog-menu':
+            if (window.BlogMenu) {
+                window.BlogMenu.initialize();
             }
             break;
         // Future pages can be added here

@@ -117,3 +117,68 @@
     font-size: 0.9rem;
   }
 }
+
+/* ========================================
+   BLOG MENU RESPONSIVE STYLES
+   ======================================== */
+
+/* Tablet (768px and below) */
+@media (max-width: 768px) {
+  .blog-title {
+    font-size: 2rem;
+  }
+  
+  .blog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+  }
+  
+  .blog-card-content {
+    padding: var(--spacing-md);
+  }
+  
+  .blog-card-title {
+    font-size: 1.1rem;
+  }
+}
+
+/* Mobile (480px and below) */
+@media (max-width: 480px) {
+  .blog-header {
+    padding: var(--spacing-lg) 0;
+  }
+  
+  .blog-title {
+    font-size: 1.75rem;
+  }
+  
+  .blog-subtitle {
+    font-size: 1rem;
+  }
+  
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+  
+  .blog-card-image {
+    height: 180px;
+  }
+  
+  .blog-card-content {
+    padding: var(--spacing-sm);
+  }
+  
+  .blog-card-title {
+    font-size: 1rem;
+  }
+  
+  .blog-card-summary {
+    font-size: 0.9rem;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: var(--spacing-sm);
+  }
+}
