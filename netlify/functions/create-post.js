@@ -64,7 +64,7 @@ exports.handler = async (event, context) => {
     };
 
     // Read existing posts
-    const postsFilePath = path.join(process.cwd(), 'data', 'posts.json');
+    const postsFilePath = path.join(__dirname, '..', '..', 'data', 'posts.json');
     let posts = [];
     
     try {
