@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <link rel="stylesheet" href="../../css/main.css">
+    <style>
+        .nav-bar {
+            background: var(--bg-secondary);
+            height: 60px;
+            width: 100%;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .menu-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .menu-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: var(--text-color-dark);
+        }
+
+        .loading-message {
+            text-align: center;
+            padding: var(--spacing-xxl);
+            color: var(--text-secondary);
+        }
+
+        .not-found {
+            text-align: center;
+            padding: var(--spacing-xxl);
+        }
+
+        .post-tags {
+            margin-top: var(--spacing-sm);
+        }
+
+        .tag-label {
+            color: var(--text-secondary);
+            margin-right: var(--spacing-sm);
+        }
+
+        .tag {
+            display: inline-block;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            margin-right: var(--spacing-xs);
+            margin-bottom: var(--spacing-xs);
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-bar">
+        <a href="../../landing-page.html" class="menu-btn">Home</a>
+        <a href="../blog-menu.html" class="menu-btn">Menu</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div id="blog-post-container">
+                <!-- Content will be loaded dynamically -->
+                <div class="loading-message">
+                    <h2>Loading post...</h2>
+                    <p>Please wait while we load the blog post content.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../../js/core/theme-manager.js"></script>
+    <script src="../../js/main.js"></script>
+    <script src="../../js/pages/blog-post.js"></script>
+    <script>
+        // Load the specific blog post
+        document.addEventListener('DOMContentLoaded', () => {
+            loadBlogPost();
+        });
+
+        function loadBlogPost() {
+            // Get slug from URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+            
+            if (!slug) {
+                showNotFound();
+                return;
+            }
+            
+            // Load post data
+            const adminPosts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+            const post = adminPosts.find(p => p.slug === slug);
+            
+            if (post) {
+                renderBlogPost(post);
+            } else {
+                showNotFound();
+            }
+        }
+
+        function renderBlogPost(post) {
+            const container = document.getElementById('blog-post-container');
+            
+            // Update page title
+            document.title = post.title + ' - Research Blog';
+            
+            // Format date
+            const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            // Format tags
+            const tagsHtml = post.tags && post.tags.length > 0 
+                ? `<div class="post-tags">
+                     <span class="tag-label">Tags:</span>
+                     ${post.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                   </div>`
+                : '';
+
+            container.innerHTML = `
+                <article class="blog-post">
+                    <header class="post-header">
+                        <h1 class="post-title">${post.title}</h1>
+                        <div class="post-meta">
+                            <span class="post-date">Published: ${formattedDate}</span>
+                            ${tagsHtml}
+                        </div>
+                    </header>
+
+                    <div class="post-content">
+                        ${post.content}
+                    </div>
+
+                    ${post.externalLink ? `
+                        <div class="external-links">
+                            <h3>External Resources</h3>
+                            <div class="links-container">
+                                <a href="${post.externalLink}" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                                    📄 Read Full Paper
+                                </a>
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <div class="post-navigation">
+                        <a href="../blog-menu.html" class="btn btn-secondary">← Back to Blog</a>
+                    </div>
+                </article>
+            `;
+        }
+
+        function showNotFound() {
+            const container = document.getElementById('blog-post-container');
+            container.innerHTML = `
+                <div class="not-found">
+                    <h2>Post Not Found</h2>
+                    <p>The blog post you're looking for doesn't exist or has been removed.</p>
+                    <a href="../blog-menu.html" class="btn btn-primary">← Back to Blog</a>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

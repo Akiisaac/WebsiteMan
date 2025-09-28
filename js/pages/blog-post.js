@@ -8,7 +8,6 @@ window.BlogPost = {
      * Initialize blog post page
      */
     initialize: function() {
-        console.log('Blog Post page initialized');
         // For now, just basic initialization
         // Future: Load dynamic content, handle interactions
     }

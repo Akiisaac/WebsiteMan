@@ -10,7 +10,6 @@ function initializeLandingPage() {
     const readDocsBtn = document.querySelector('.btn');
     if (readDocsBtn) {
         readDocsBtn.addEventListener('click', function() {
-            console.log('User clicked "Read Documentation" button');
             // Future: Add analytics tracking here
         });
     }

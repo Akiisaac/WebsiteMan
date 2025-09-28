@@ -5,7 +5,6 @@
 
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Research Blog Website loaded successfully');
     
     // Initialize website functionality
     initializeWebsite();
@@ -68,7 +67,6 @@ function initializePageSpecific(page) {
             break;
         // Future pages can be added here
         default:
-            console.log(`No specific initialization for page: ${page}`);
     }
 }
 

@@ -16,21 +16,37 @@ async function initializeBlogMenu() {
 }
 
 /**
- * Load blog data from JSON file
+ * Load blog data from localStorage first, then fallback to JSON file
  */
 async function loadBlogData() {
     try {
+        // First, try to load from localStorage (admin-created posts)
+        const adminPosts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+        
+        // Then load from JSON file (static posts)
         const response = await fetch('../data/blogs.json');
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        let staticPosts = [];
+        
+        if (response.ok) {
+            const data = await response.json();
+            staticPosts = data.posts.filter(post => post.published);
         }
-
-        const data = await response.json();
-        blogData = data.posts.filter(post => post.published);
+        
+        // Combine admin posts and static posts
+        // Admin posts take priority (they're newer)
+        const allPosts = [...adminPosts, ...staticPosts];
+        
+        // Remove duplicates based on slug
+        const uniquePosts = allPosts.filter((post, index, self) => 
+            index === self.findIndex(p => p.slug === post.slug)
+        );
+        
+        // Sort by date (newest first)
+        blogData = uniquePosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        
     } catch (error) {
         console.error('Error loading blog data:', error);
-        // Fallback to hardcoded data if fetch fails
+        // Fallback to hardcoded data if everything fails
         blogData = [
             {
                 id: "1",
@@ -59,8 +75,8 @@ async function loadBlogData() {
                 published: true,
                 slug: "synthetic-hipvs-natural-enemies"
             }
-            ];
-        }
+        ];
+    }
 }
 
 /**
@@ -120,7 +136,7 @@ function createBlogCard(post) {
             <h2 class="blog-card-title">${post.title}</h2>
             <p class="blog-card-date">${formattedDate}</p>
             <p class="blog-card-summary">${post.summary}</p>
-            <a href="posts/${post.slug}.html" class="blog-card-button">
+            <a href="posts/dynamic-post.html?slug=${post.slug}" class="blog-card-button">
                 Read More
             </a>
         </div>

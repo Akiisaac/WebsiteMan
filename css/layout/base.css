@@ -25,9 +25,16 @@ body {
 
 /* Layout Components */
 .container {
-  max-width: 1200px;
+  max-width: 80%;
   margin: 0 auto;
   padding: 0 var(--spacing-md);
+}
+
+/* Header Layout */
+.site-header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .section {

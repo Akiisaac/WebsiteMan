@@ -10,20 +10,45 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../../images/favicon.ico">
+    
+    <style>
+        .nav-bar {
+            background: var(--bg-secondary);
+            height: 60px;
+            width: 100%;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .menu-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .menu-btn:hover {
+            background: var(--accent-primary);
+            border-color: var(--accent-primary);
+            color: var(--text-color-dark);
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="site-header">
-        <div class="container">
-            <h1 class="site-title">
-                <a href="../../landing-page.html">Research Blog</a>
-            </h1>
-            <nav class="main-nav">
-                <a href="../../landing-page.html" class="nav-link">Home</a>
-                <a href="../blog-menu.html" class="nav-link">Blog</a>
-            </nav>
-        </div>
-    </header>
+    <nav class="nav-bar">
+        <a href="../../landing-page.html" class="menu-btn">Home</a>
+        <a href="../blog-menu.html" class="menu-btn">Menu</a>
+    </nav>
 
     <!-- Main Content -->
     <main class="main-content">

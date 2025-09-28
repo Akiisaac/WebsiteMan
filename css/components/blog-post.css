@@ -4,7 +4,7 @@
 
 /* Blog Post Container */
 .blog-post {
-  max-width: 800px;
+  max-width: 80%;
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-lg);
 }
