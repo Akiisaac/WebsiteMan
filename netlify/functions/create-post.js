@@ -79,8 +79,9 @@ exports.handler = async (event, context) => {
     // Add new post
     posts.unshift(post); // Add to beginning of array
 
-    // Write updated posts back to file
-    await fs.writeFile(postsFilePath, JSON.stringify(posts, null, 2));
+    // Note: Netlify Functions run in read-only environment
+    // For now, we'll return the updated posts array
+    // In a real implementation, this would write to a database
 
     return {
       statusCode: 201,
