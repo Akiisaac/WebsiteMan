@@ -3,19 +3,17 @@ const path = require('path');
 
 exports.handler = async (event, context) => {
   try {
-    // Path to posts data file
-    const postsFilePath = path.join(process.cwd(), 'data', 'posts.json');
+    // Path to posts data file (relative to function directory)
+    const postsFilePath = path.join(__dirname, '..', '..', 'data', 'posts.json');
     
-    // Check if file exists, if not create empty array
+    // Read posts from file
     let posts = [];
     try {
       const fileContent = await fs.readFile(postsFilePath, 'utf8');
       posts = JSON.parse(fileContent);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        // File doesn't exist, create it with empty array
-        await fs.mkdir(path.dirname(postsFilePath), { recursive: true });
-        await fs.writeFile(postsFilePath, JSON.stringify([], null, 2));
+        // File doesn't exist, return empty array
         posts = [];
       } else {
         throw error;
