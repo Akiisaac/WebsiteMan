@@ -30,7 +30,7 @@ function initializeWebsite() {
 function getCurrentPage() {
     const path = window.location.pathname;
     
-    if (path.includes('landing-page.html') || path === '/' || path === '/index.html') {
+    if (path.includes('index.html') || path === '/' || path === '/index.html') {
         return 'landing-page';
     }
     else if (path.includes('blog-menu.html')) {

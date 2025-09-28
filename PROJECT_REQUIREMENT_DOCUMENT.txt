@@ -175,7 +175,7 @@ A simple, clean blogging website designed for a PhD student to showcase research
 
 ### 8.1 GitHub Pages Hosting
 - **Repository Structure**: 
-  - `/landing-page.html` (homepage/about page) ✅ **COMPLETED**
+  - `/index.html` (homepage/about page) ✅ **COMPLETED**
   - `/blog/blog-menu.html` (blog menu page) ✅ **COMPLETED**
   - `/blog/posts/` (individual blog posts) ✅ **COMPLETED**
   - `/admin/` (admin interface) ⏳ **IN PROGRESS**
@@ -229,7 +229,7 @@ A simple, clean blogging website designed for a PhD student to showcase research
 ## 11. Acceptance Criteria
 
 ### 11.1 Public Site
-- ✅ Homepage displays profile and bio correctly (landing-page.html)
+- ✅ Homepage displays profile and bio correctly (index.html)
 - ✅ Social media links (Google Scholar, Twitter, LinkedIn, Email) added
 - ✅ Blog menu shows all published posts in responsive grid/list format
 - ✅ Individual blog post pages with proper navigation

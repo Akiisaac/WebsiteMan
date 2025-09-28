@@ -109,7 +109,7 @@ You are helping build a simple research blogging website based on the PRD provid
 ## File Structure Requirements ✅ **UPDATED TO CURRENT STATE**
 ```
 /
-├── landing-page.html (homepage/about page) ✅
+├── index.html (homepage/about page) ✅
 ├── blog/
 │   ├── blog-menu.html (blog menu page) ✅
 │   └── posts/ (individual blog posts) ✅
