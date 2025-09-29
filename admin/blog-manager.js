@@ -558,17 +558,21 @@ class BlogPostManager {
 
     async getAllPosts() {
         try {
+            console.log('Admin: Fetching posts from API...');
             const response = await fetch('/.netlify/functions/get-posts');
+            console.log('Admin: API response status:', response.status);
             const result = await response.json();
+            console.log('Admin: API response data:', result);
             
             if (result.success) {
+                console.log('Admin: Posts loaded successfully:', result.posts.length, 'posts');
                 return result.posts;
             } else {
-                console.error('Error fetching posts:', result.error);
+                console.error('Admin: Error fetching posts:', result.error);
                 return [];
             }
         } catch (error) {
-            console.error('Error fetching posts:', error);
+            console.error('Admin: Error fetching posts:', error);
             return [];
         }
     }
