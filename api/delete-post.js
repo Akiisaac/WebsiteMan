@@ -1,64 +1,37 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async (event, context) => {
+module.exports = async (req, res) => {
   // Only allow DELETE requests
-  if (event.httpMethod !== 'DELETE') {
-    return {
-      statusCode: 405,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: false,
-        error: 'Method not allowed'
-      })
-    };
+  if (req.method !== 'DELETE') {
+    return res.status(405).json({
+      success: false,
+      error: 'Method not allowed'
+    });
   }
 
   try {
-    const postId = event.queryStringParameters?.id;
+    const postId = req.query.id;
     if (!postId) {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Missing post ID in query parameters'
-        })
-      };
+      return res.status(400).json({
+        success: false,
+        error: 'Post ID is required'
+      });
     }
 
-    // Initialize Sup前端a客户端
+    // Initialize Supabase client
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
-      return {
-        statusCode: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Supabase configuration missing'
-        })
-      };
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase configuration missing'
+      });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Delete post from Supabase
+    // Delete the post from Supabase
     const { error } = await supabase
       .from('blog_posts')
       .delete()
@@ -68,36 +41,26 @@ exports.handler = async (event, context) => {
       throw error;
     }
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: true,
-        message: 'Post deleted successfully'
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    
+    return res.status(200).json({
+      success: true,
+      message: 'Post deleted successfully'
+    });
 
   } catch (error) {
     console.error('Error deleting post:', error);
     
-    return {
-      statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: false,
-        error: 'Failed to delete post',
-        message: error.message
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to delete post',
+      message: error.message
+    });
   }
 };

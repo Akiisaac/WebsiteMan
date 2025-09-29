@@ -1,22 +1,13 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async (event, context) => {
+module.exports = async (req, res) => {
   try {
-    const slug = event.queryStringParameters?.slug;
+    const slug = req.query.slug;
     if (!slug) {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Missing slug parameter'
-        })
-      };
+      return res.status(400).json({
+        success: false,
+        error: 'Slug is required'
+      });
     }
 
     // Initialize Supabase client
@@ -24,24 +15,15 @@ exports.handler = async (event, context) => {
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
-      return {
-        statusCode: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Supabase configuration missing'
-        })
-      };  
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase configuration missing'
+      });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch single post from Supabase
+    // Fetch single post by slug
     const { data: post, error } = await supabase
       .from('blog_posts')
       .select('*')
@@ -51,25 +33,16 @@ exports.handler = async (event, context) => {
 
     if (error) {
       if (error.code === 'PGRST116') {
-        // No post found
-        return {
-          statusCode: 404,
-          headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Access-Control-Allow-Headers': 'Content-Type',
-            'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-          },
-          body: JSON.stringify({
-            success: false,
-            error: 'Post not found'
-          })
-        };
+        // No rows found
+        return res.status(404).json({
+          success: false,
+          error: 'Post not found'
+        });
       }
       throw error;
     }
 
-    // Transform data to match expected format
+    // Transform the post data
     const transformedPost = {
       id: post.id.toString(),
       slug: post.slug,
@@ -83,36 +56,26 @@ exports.handler = async (event, context) => {
       status: post.status
     };
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json', 
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: true,
-        post: transformedPost
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    
+    return res.status(200).json({
+      success: true,
+      post: transformedPost
+    });
 
   } catch (error) {
-    console.error('Error fetching post:', error);
+    console.error('Error fetching single post:', error);
     
-    return {
-      statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: false,
-        error: 'Failed to fetch post',
-        message: error.message
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to fetch post',
+      message: error.message
+    });
   }
 };

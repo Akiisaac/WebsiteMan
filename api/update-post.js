@@ -1,90 +1,53 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async (event, context) => {
+module.exports = async (req, res) => {
   // Only allow PUT requests
-  if (event.httpMethod !== 'PUT') {
-    return {
-      statusCode: 405,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: false,
-        error: 'Method not allowed'
-      })
-    };
+  if (req.method !== 'PUT') {
+    return res.status(405).json({
+      success: false,
+      error: 'Method not allowed'
+    });
   }
 
   try {
-    const postId = event.queryStringParameters?.id;
+    const postId = req.query.id;
+    const updatedPost = req.body;
+    
     if (!postId) {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Missing post ID in query parameters'
-        })
-      };
+      return res.status(400).json({
+        success: false,
+        error: 'Post ID is required'
+      });
     }
 
-    // Parse request body
-    const updatedPost = JSON.parse(event.body);
-    
     // Validate required fields
     if (!updatedPost.title || !updatedPost.summary || !updatedPost.content) {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Missing required fields: title, summary, content'
-        })
-      };
+      return res.status(400).json({
+        success: false,
+        error: 'Missing required fields: title, summary, content'
+      });
     }
-
-    // Generate new slug if title changed
-    const slug = updatedPost.title
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim('-');
 
     // Initialize Supabase client
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
-      return {
-        statusCode: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Content-Type',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Supabase configuration missing'
-        })
-      };
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase configuration missing'
+      });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Generate slug from title
+    const slug = updatedPost.title
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim('-');
 
     // Update post in Supabase
     const { data, error } = await supabase
@@ -98,8 +61,7 @@ exports.handler = async (event, context) => {
         external_link: updatedPost.externalLink || '',
         publish_date: updatedPost.publishDate || new Date().toISOString(),
         tags: updatedPost.tags || [],
-        status: updatedPost.status || 'published',
-        updated_at: new Date().toISOString()
+        status: 'published'
       })
       .eq('id', postId)
       .select()
@@ -110,7 +72,7 @@ exports.handler = async (event, context) => {
     }
 
     // Transform response data
-    const resultPost = {
+    const transformedPost = {
       id: data.id.toString(),
       slug: data.slug,
       title: data.title,
@@ -123,37 +85,27 @@ exports.handler = async (event, context) => {
       status: data.status
     };
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: true,
-        post: resultPost,
-        message: 'Post updated successfully'
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    
+    return res.status(200).json({
+      success: true,
+      post: transformedPost,
+      message: 'Post updated successfully'
+    });
 
   } catch (error) {
     console.error('Error updating post:', error);
     
-    return {
-      statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: false,
-        error: 'Failed to update post',
-        message: error.message
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to update post',
+      message: error.message
+    });
   }
 };
