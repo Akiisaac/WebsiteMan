@@ -357,6 +357,7 @@ class BlogPostManager {
             let response;
             
             if (this.isEditing) {
+                console.log('Editing post with ID:', this.currentPost.id);
                 // Update existing post
                 response = await fetch(`/.netlify/functions/update-post?id=${this.currentPost.id}`, {
                     method: 'PUT',
@@ -698,6 +699,7 @@ class BlogPostManager {
         if (post) {
             // Fix the post object format for the form
             const formattedPost = {
+                id: post.id, // Keep the original ID for updates
                 title: post.title,
                 summary: post.summary,
                 content: post.content,
