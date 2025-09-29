@@ -16,66 +16,24 @@ async function initializeBlogMenu() {
 }
 
 /**
- * Load blog data from localStorage first, then fallback to JSON file
+ * Load blog data from Supabase database
  */
 async function loadBlogData() {
     try {
-        // First, try to load from localStorage (admin-created posts)
-        const adminPosts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
+        const response = await fetch('/.netlify/functions/get-posts');
+        const result = await response.json();
         
-        // Then load from JSON file (static posts)
-        const response = await fetch('../data/blogs.json');
-        let staticPosts = [];
-        
-        if (response.ok) {
-            const data = await response.json();
-            staticPosts = data.posts.filter(post => post.published);
+        if (result.success) {
+            // Sort by date (newest first)
+            blogData = result.posts.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+        } else {
+            console.error('Error loading blog data:', result.error);
+            blogData = [];
         }
-        
-        // Combine admin posts and static posts
-        // Admin posts take priority (they're newer)
-        const allPosts = [...adminPosts, ...staticPosts];
-        
-        // Remove duplicates based on slug
-        const uniquePosts = allPosts.filter((post, index, self) => 
-            index === self.findIndex(p => p.slug === post.slug)
-        );
-        
-        // Sort by date (newest first)
-        blogData = uniquePosts.sort((a, b) => new Date(b.date) - new Date(a.date));
         
     } catch (error) {
         console.error('Error loading blog data:', error);
-        // Fallback to hardcoded data if everything fails
-        blogData = [
-            {
-                id: "1",
-                title: "Behavioral Responses of Cabbage Aphids to Volatile Cues",
-                summary: "Investigating how cabbage aphids respond to volatile cues emitted by plants under herbivory by conspecifics and heterospecifics. This study reveals fascinating insights into chemical communication in pest communities.",
-                thumbnail: "../images/placeholder_image.png",
-                date: "2024-01-15",
-                published: true,
-                slug: "cabbage-aphids-volatile-cues"
-            },
-            {
-                id: "2", 
-                title: "Push-Pull Strategy for Oilseed Rape Pest Management",
-                summary: "Developing innovative push-pull strategies targeting cabbage stem flea beetle and grey field slug in oilseed rape crops. Exploring natural and synthetic lures and deterrents for environmentally friendly crop protection.",
-                thumbnail: "../images/placeholder_image.png",
-                date: "2024-01-10",
-                published: true,
-                slug: "push-pull-oilseed-rape-management"
-            },
-            {
-                id: "3",
-                title: "Synthetic HIPVs in Natural Enemy Recruitment",
-                summary: "Exploring the effectiveness of synthetic herbivore-induced plant volatiles (HIPVs) in recruiting natural enemies for biological control. Field studies show promising results for integrated pest management approaches.",
-                thumbnail: "../images/placeholder_image.png", 
-                date: "2024-01-05",
-                published: true,
-                slug: "synthetic-hipvs-natural-enemies"
-            }
-        ];
+        blogData = [] ;
     }
 }
 
@@ -124,7 +82,7 @@ function createBlogCard(post) {
     const card = document.createElement('article');
     card.className = 'blog-card';
     
-    const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+    const formattedDate = new Date(post.publishDate).toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'

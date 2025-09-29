@@ -96,7 +96,7 @@
             loadBlogPost();
         });
 
-        function loadBlogPost() {
+        async function loadBlogPost() {
             // Get slug from URL parameter
             const urlParams = new URLSearchParams(window.location.search);
             const slug = urlParams.get('slug');
@@ -105,14 +105,19 @@
                 showNotFound();
                 return;
             }
-            
-            // Load post data
-            const adminPosts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
-            const post = adminPosts.find(p => p.slug === slug);
-            
-            if (post) {
-                renderBlogPost(post);
-            } else {
+
+            try {
+                // Load post data from Supabase
+                const response = await fetch(`/.netlify/functions/get-single-post?slug=${slug}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    renderBlogPost(result.post);
+                } else {
+                    showNotFound();
+                }
+            } catch (error) {
+                console.error('Error loading post:', error);
                 showNotFound();
             }
         }
@@ -124,7 +129,7 @@
             document.title = post.title + ' - Research Blog';
             
             // Format date
-            const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+            const formattedDate = new Date(post.publishDate).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
