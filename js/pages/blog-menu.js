@@ -162,7 +162,7 @@ function createBlogCard(post) {
     });
 
     card.innerHTML = `
-        <img src="${post.thumbnail}" alt="${post.title}" class="blog-card-image">
+        <img src="../images/placeholder_image.png" alt="${post.title}" class="blog-card-image" data-post-id="${post.id}">
         <div class="blog-card-content">
             <h2 class="blog-card-title">${post.title}</h2>
             <p class="blog-card-date">${formattedDate}</p>
@@ -173,7 +173,26 @@ function createBlogCard(post) {
         </div>
     `;
 
+    // Load thumbnail separately
+    loadThumbnail(post.id, card.querySelector('.blog-card-image'));
+
     return card;
+}
+
+/**
+ * Load thumbnail for a specific post
+ */
+async function loadThumbnail(postId, imgElement) {
+    try {
+        const response = await fetch(`/.netlify/functions/get-thumbnail?id=${postId}`);
+        const result = await response.json();
+        
+        if (result.success && result.thumbnail) {
+            imgElement.src = result.thumbnail;
+        }
+    } catch (error) {
+        console.error('Error loading thumbnail for post', postId, ':', error);
+    }
 }
 
 /**

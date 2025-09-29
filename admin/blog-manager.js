@@ -611,6 +611,9 @@ class BlogPostManager {
             this.showCreateForm();
         });
 
+        // Load thumbnails for all posts
+        this.loadAllThumbnails(posts);
+
         // Add action event listeners for each post card
         posts.forEach(post => {
             const readBtn = document.getElementById(`read-post-${post.id}`);
@@ -645,7 +648,7 @@ class BlogPostManager {
         return `
             <div class="admin-post-card">
                 <div class="post-thumbnail">
-                    <img src="${post.thumbnail}" alt="${post.title}" onerror="this.src='../images/placeholder_image.png'">
+                    <img src="../images/placeholder_image.png" alt="${post.title}" data-post-id="${post.id}">
                 </div>
                 <div class="post-info">
                     <h3 class="post-title">${post.title}</h3>
@@ -669,6 +672,28 @@ class BlogPostManager {
         const post = this.getAllPosts().find(p => p.id == postId);
         if (post) {
             window.open(`../blog/posts/dynamic-post.html?slug=${post.slug}`, '_blank');
+        }
+    }
+
+    async loadAllThumbnails(posts) {
+        for (const post of posts) {
+            const imgElement = document.querySelector(`img[data-post-id="${post.id}"]`);
+            if (imgElement) {
+                await this.loadThumbnail(post.id, imgElement);
+            }
+        }
+    }
+
+    async loadThumbnail(postId, imgElement) {
+        try {
+            const response = await fetch(`/.netlify/functions/get-thumbnail?id=${postId}`);
+            const result = await response.json();
+            
+            if (result.success && result.thumbnail) {
+                imgElement.src = result.thumbnail;
+            }
+        } catch (error) {
+            console.error('Error loading thumbnail for post', postId, ':', error);
         }
     }
 

@@ -2,6 +2,23 @@ const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
   try {
+    // Get post ID from query parameters
+    const postId = event.queryStringParameters?.id;
+    
+    if (!postId) {
+      return {
+        statusCode: 400,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
+          success: false,
+          error: 'Post ID is required'
+        })
+      };
+    }
+
     // Initialize Supabase client
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
@@ -22,36 +39,30 @@ exports.handler = async (event, context) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch posts from Supabase with timeout
-    const fetchPromise = supabase
+    // Fetch thumbnail for specific post
+    const { data: post, error } = await supabase
       .from('blog_posts')
-      .select('*')
-      .eq('status', 'published')
-      .order('publish_date', { ascending: false });
-    
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Database query timeout')), 10000)
-    );
-    
-    const { data: posts, error } = await Promise.race([fetchPromise, timeoutPromise]);
+      .select('thumbnail')
+      .eq('id', postId)
+      .single();
 
     if (error) {
       throw error;
     }
 
-    // Transform data to match expected format
-    const transformedPosts = posts.map(post => ({
-      id: post.id.toString(),
-      slug: post.slug,
-      title: post.title,
-      summary: post.summary,
-      content: post.content,
-      thumbnail: post.thumbnail ? 'data:image/png;base64,placeholder' : '../images/placeholder_image.png', // Use placeholder to reduce size
-      externalLink: post.external_link,
-      publishDate: post.publish_date,
-      tags: post.tags || [],
-      status: post.status
-    }));
+    if (!post || !post.thumbnail) {
+      return {
+        statusCode: 404,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
+          success: false,
+          error: 'Thumbnail not found'
+        })
+      };
+    }
 
     return {
       statusCode: 200,
@@ -59,17 +70,16 @@ exports.handler = async (event, context) => {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+        'Access-Control-Allow-Methods': 'GET'
       },
       body: JSON.stringify({
         success: true,
-        posts: transformedPosts,
-        count: transformedPosts.length
+        thumbnail: post.thumbnail
       })
     };
 
   } catch (error) {
-    console.error('Error fetching posts:', error);
+    console.error('Error fetching thumbnail:', error);
     
     return {
       statusCode: 500,
@@ -77,11 +87,11 @@ exports.handler = async (event, context) => {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+        'Access-Control-Allow-Methods': 'GET'
       },
       body: JSON.stringify({
         success: false,
-        error: 'Failed to fetch posts',
+        error: 'Failed to fetch thumbnail',
         message: error.message
       })
     };
