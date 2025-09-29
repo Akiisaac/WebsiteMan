@@ -11,6 +11,10 @@ const postsPerPage = 9;
  */
 async function initializeBlogMenu() {
     showLoadingState();
+    
+    // Add a small delay to ensure loading state is visible
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
     const success = await loadBlogData();
     if (success) {
         displayBlogPosts();
