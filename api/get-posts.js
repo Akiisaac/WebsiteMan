@@ -1,23 +1,16 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async (event, context) => {
+module.exports = async (req, res) => {
   try {
     // Initialize Supabase client
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
-      return {
-        statusCode: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Supabase configuration missing'
-        })
-      };
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase configuration missing'
+      });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -53,37 +46,27 @@ exports.handler = async (event, context) => {
       status: post.status
     }));
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: true,
-        posts: transformedPosts,
-        count: transformedPosts.length
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    
+    return res.status(200).json({
+      success: true,
+      posts: transformedPosts,
+      count: transformedPosts.length
+    });
 
   } catch (error) {
     console.error('Error fetching posts:', error);
     
-    return {
-      statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
-      },
-      body: JSON.stringify({
-        success: false,
-        error: 'Failed to fetch posts',
-        message: error.message
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to fetch posts',
+      message: error.message
+    });
   }
 };

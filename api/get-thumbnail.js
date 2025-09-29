@@ -1,22 +1,15 @@
 const { createClient } = require('@supabase/supabase-js');
 
-exports.handler = async (event, context) => {
+module.exports = async (req, res) => {
   try {
     // Get post ID from query parameters
-    const postId = event.queryStringParameters?.id;
+    const postId = req.query.id;
     
     if (!postId) {
-      return {
-        statusCode: 400,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Post ID is required'
-        })
-      };
+      return res.status(400).json({
+        success: false,
+        error: 'Post ID is required'
+      });
     }
 
     // Initialize Supabase client
@@ -24,17 +17,10 @@ exports.handler = async (event, context) => {
     const supabaseKey = process.env.SUPABASE_ANON_KEY;
     
     if (!supabaseUrl || !supabaseKey) {
-      return {
-        statusCode: 500,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Supabase configuration missing'
-        })
-      };
+      return res.status(500).json({
+        success: false,
+        error: 'Supabase configuration missing'
+      });
     }
 
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -51,49 +37,32 @@ exports.handler = async (event, context) => {
     }
 
     if (!post || !post.thumbnail) {
-      return {
-        statusCode: 404,
-        headers: {
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        },
-        body: JSON.stringify({
-          success: false,
-          error: 'Thumbnail not found'
-        })
-      };
+      return res.status(404).json({
+        success: false,
+        error: 'Thumbnail not found'
+      });
     }
 
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET'
-      },
-      body: JSON.stringify({
-        success: true,
-        thumbnail: post.thumbnail
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    
+    return res.status(200).json({
+      success: true,
+      thumbnail: post.thumbnail
+    });
 
   } catch (error) {
     console.error('Error fetching thumbnail:', error);
     
-    return {
-      statusCode: 500,
-      headers: {
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET'
-      },
-      body: JSON.stringify({
-        success: false,
-        error: 'Failed to fetch thumbnail',
-        message: error.message
-      })
-    };
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'GET');
+    
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to fetch thumbnail',
+      message: error.message
+    });
   }
 };
