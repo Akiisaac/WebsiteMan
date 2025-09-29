@@ -22,12 +22,18 @@ exports.handler = async (event, context) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch posts from Supabase
-    const { data: posts, error } = await supabase
+    // Fetch posts from Supabase with timeout
+    const fetchPromise = supabase
       .from('blog_posts')
       .select('*')
       .eq('status', 'published')
-      .order('publish_date', { ascending: false })
+      .order('publish_date', { ascending: false });
+    
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Database query timeout')), 10000)
+    );
+    
+    const { data: posts, error } = await Promise.race([fetchPromise, timeoutPromise]);
 
     if (error) {
       throw error;
