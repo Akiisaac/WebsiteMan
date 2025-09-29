@@ -352,12 +352,61 @@ class BlogPostManager {
             createdAt: new Date().toISOString()
         };
 
-        // Save to localStorage for now
-        this.saveToLocalStorage(post);
-        
-        alert(`Post "${data.title}" ${this.isEditing ? 'updated' : 'saved'} successfully!`);
-        
-        this.showAdminDashboard();
+        // Save to Supabase database
+        try {
+            let response;
+            
+            if (this.isEditing) {
+                // Update existing post
+                response = await fetch(`/.netlify/functions/update-post?id=${this.currentPost.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: post.title,
+                        summary: post.summary,
+                        content: post.content,
+                        thumbnail: post.thumbnail,
+                        externalLink: post.externalLink,
+                        publishDate: post.date,
+                        tags: post.tags,
+                        status: post.status
+                    })
+                });
+            } else {
+                // Create new post
+                response = await fetch('/.netlify/functions/create-post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: post.title,
+                        summary: post.summary,
+                        content: post.content,
+                        thumbnail: post.thumbnail,
+                        externalLink: post.externalLink,
+                        publishDate: post.date,
+                        tags: post.tags,
+                        status: post.status
+                    })
+                });
+            }
+
+            const result = await response.json();
+            
+            if (result.success) {
+                alert(`Post "${data.title}" ${this.isEditing ? 'updated' : 'saved'} successfully!`);
+                // Go back to dashboard
+                this.showAdminDashboard();
+            } else {
+                alert(`Error: ${result.error}`);
+            }
+        } catch (error) {
+            console.error('Error saving post:', error);
+            alert('Error saving post. Please try again.');
+        }
     }
 
     convertFileToDataURL(file) {
@@ -378,22 +427,7 @@ class BlogPostManager {
             .trim();
     }
 
-    saveToLocalStorage(post) {
-        const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
-        
-        if (this.isEditing) {
-            // Update existing post
-            const index = posts.findIndex(p => p.id === post.id);
-            if (index !== -1) {
-                posts[index] = post;
-            }
-        } else {
-            // Add new post
-            posts.push(post);
-        }
-        
-        localStorage.setItem('blog_posts', JSON.stringify(posts));
-    }
+    // saveToLocalStorage method removed - now using Supabase database
 
     showPreview() {
         const data = this.collectFormData();
@@ -515,16 +549,25 @@ class BlogPostManager {
         `;
     }
 
-    getAllPosts() {
-        // Get posts from localStorage
-        const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
-        
-        // Sort by publication date (newest first)
-        return posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+    async getAllPosts() {
+        try {
+            const response = await fetch('/.netlify/functions/get-posts');
+            const result = await response.json();
+            
+            if (result.success) {
+                return result.posts;
+            } else {
+                console.error('Error fetching posts:', result.error);
+                return [];
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            return [];
+        }
     }
 
-    showAdminDashboard() {
-        const posts = this.getAllPosts();
+    async showAdminDashboard() {
+        const posts = await this.getAllPosts();
         
         const container = document.getElementById('admin-container');
         container.innerHTML = `
@@ -618,18 +661,28 @@ class BlogPostManager {
         }
     }
 
-    deletePost(postId) {
-        const post = this.getAllPosts().find(p => p.id == postId);
+    async deletePost(postId) {
+        const posts = await this.getAllPosts();
+        const post = posts.find(p => p.id == postId);
         if (post) {
             if (confirm(`Are you sure you want to delete "${post.title}"?`)) {
-                // Remove from localStorage array
-                const posts = JSON.parse(localStorage.getItem('blog_posts') || '[]');
-                const updatedPosts = posts.filter(p => p.id != postId);
-                localStorage.setItem('blog_posts', JSON.stringify(updatedPosts));
-                
-                alert('Post deleted successfully!');
-                // Refresh the dashboard
-                this.showAdminDashboard();
+                try {
+                    const response = await fetch(`/.netlify/functions/delete-post?id=${postId}`, {
+                        method: 'DELETE'
+                    });
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        alert('Post deleted successfully!');
+                        // Refresh the dashboard
+                        this.showAdminDashboard();
+                    } else {
+                        alert(`Error: ${result.error}`);
+                    }
+                } catch (error) {
+                    console.error('Error deleting post:', error);
+                    alert('Error deleting post. Please try again.');
+                }
             }
         }
     }
@@ -638,11 +691,22 @@ class BlogPostManager {
         this.showAdminDashboard();
     }
 
-    editPost(postId) {
+    async editPost(postId) {
         // Find the post by ID
-        const post = this.getAllPosts().find(p => p.id == postId);
+        const posts = await this.getAllPosts();
+        const post = posts.find(p => p.id == postId);
         if (post) {
-            this.showCreateForm(post);
+            // Fix the post object format for the form
+            const formattedPost = {
+                title: post.title,
+                summary: post.summary,
+                content: post.content,
+                publicationDate: post.publishDate?.split('T')[0] || '',
+                tags: post.tags?.join(', ') || '',
+                externalLink: post.externalLink || '',
+                slug: post.slug
+            };
+            this.showCreateForm(formattedPost);
         } else {
             alert('Post not found!');
         }
