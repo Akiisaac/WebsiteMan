@@ -10,8 +10,13 @@ const postsPerPage = 9;
  * Initialize blog menu functionality
  */
 async function initializeBlogMenu() {
-    await loadBlogData();
-    displayBlogPosts();
+    showLoadingState();
+    const success = await loadBlogData();
+    if (success) {
+        displayBlogPosts();
+    } else {
+        showErrorState();
+    }
     setupPagination();
 }
 
@@ -26,14 +31,63 @@ async function loadBlogData() {
         if (result.success) {
             // Sort by date (newest first)
             blogData = result.posts.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+            return true;
         } else {
             console.error('Error loading blog data:', result.error);
             blogData = [];
+            return false;
         }
         
     } catch (error) {
         console.error('Error loading blog data:', error);
-        blogData = [] ;
+        blogData = [];
+        return false;
+    }
+}
+
+/**
+ * Show loading state with spinner
+ */
+function showLoadingState() {
+    const blogGrid = document.getElementById('blog-grid');
+    if (!blogGrid) return;
+    
+    blogGrid.innerHTML = `
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <h3>Loading blog posts...</h3>
+            <p>Fetching your latest research updates from our database.</p>
+        </div>
+    `;
+}
+
+/**
+ * Show error state with retry button
+ */
+function showErrorState() {
+    const blogGrid = document.getElementById('blog-grid');
+    if (!blogGrid) return;
+    
+    blogGrid.innerHTML = `
+        <div class="error-state">
+            <div class="error-icon">⚠️</div>
+            <h3>Unable to load blog posts</h3>
+            <p>There was a problem connecting to our database. This might be a temporary issue.</p>
+            <button class="btn btn-primary retry-btn" onclick="retryLoadBlogData()">Try Again</button>
+        </div>
+    `;
+}
+
+/**
+ * Retry loading blog data
+ */
+async function retryLoadBlogData() {
+    showLoadingState();
+    const success = await loadBlogData();
+    if (success) {
+        displayBlogPosts();
+    } else {
+        showErrorState();
     }
 }
 

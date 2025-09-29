@@ -106,6 +106,9 @@
                 return;
             }
 
+            // Show loading state
+            showLoadingState();
+
             try {
                 // Load post data from Supabase
                 const response = await fetch(`/.netlify/functions/get-single-post?slug=${slug}`);
@@ -118,7 +121,7 @@
                 }
             } catch (error) {
                 console.error('Error loading post:', error);
-                showNotFound();
+                showError();
             }
         }
 
@@ -172,6 +175,30 @@
                         <a href="../blog-menu.html" class="btn btn-secondary">← Back to Blog</a>
                     </div>
                 </article>
+            `;
+        }
+
+        function showLoadingState() {
+            const container = document.getElementById('blog-post-container');
+            container.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <h2>Loading blog post...</h2>
+                    <p>Fetching the latest research content from our database.</p>
+                </div>
+            `;
+        }
+
+        function showError() {
+            const container = document.getElementById('blog-post-container');
+            container.innerHTML = `
+                <div class="error-state">
+                    <div class="error-icon">⚠️</div>
+                    <h2>Unable to load blog post</h2>
+                    <p>There was a problem connecting to our database. This might be a temporary issue.</p>
+                    <button onclick="location.reload()" class="retry-btn">Try Again</button>
+                    <a href="../blog-menu.html" class="btn btn-secondary">Back to Blog Menu</a>
+                </div>
             `;
         }
 
