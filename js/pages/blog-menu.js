@@ -10,12 +10,14 @@ const postsPerPage = 9;
  * Initialize blog menu functionality
  */
 async function initializeBlogMenu() {
+    console.log('Initializing blog menu...');
     showLoadingState();
     
     // Add a small delay to ensure loading state is visible
     await new Promise(resolve => setTimeout(resolve, 500));
     
     const success = await loadBlogData();
+    console.log('Blog data loaded:', success);
     if (success) {
         displayBlogPosts();
     } else {
@@ -29,12 +31,16 @@ async function initializeBlogMenu() {
  */
 async function loadBlogData() {
     try {
+        console.log('Fetching blog data from API...');
         const response = await fetch('/.netlify/functions/get-posts');
+        console.log('API response status:', response.status);
         const result = await response.json();
+        console.log('API response data:', result);
         
         if (result.success) {
             // Sort by date (newest first)
             blogData = result.posts.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+            console.log('Blog data loaded successfully:', blogData.length, 'posts');
             return true;
         } else {
             console.error('Error loading blog data:', result.error);
@@ -53,8 +59,12 @@ async function loadBlogData() {
  * Show loading state with spinner
  */
 function showLoadingState() {
+    console.log('Showing loading state...');
     const blogGrid = document.getElementById('blog-grid');
-    if (!blogGrid) return;
+    if (!blogGrid) {
+        console.error('Blog grid element not found!');
+        return;
+    }
     
     blogGrid.innerHTML = `
         <div class="loading-state">
@@ -63,6 +73,7 @@ function showLoadingState() {
             <p>Fetching your latest research updates from our database.</p>
         </div>
     `;
+    console.log('Loading state displayed');
 }
 
 /**
@@ -99,6 +110,7 @@ async function retryLoadBlogData() {
  * Display blog posts in the grid
  */
 function displayBlogPosts() {
+    console.log('Displaying blog posts...');
     const blogGrid = document.getElementById('blog-grid');
     if (!blogGrid) {
         console.error('Blog grid element not found!');
@@ -112,6 +124,8 @@ function displayBlogPosts() {
     const startIndex = (currentPage - 1) * postsPerPage;
     const endIndex = startIndex + postsPerPage;
     const postsToShow = blogData.slice(startIndex, endIndex);
+
+    console.log('Posts to show:', postsToShow.length, 'out of', blogData.length, 'total posts');
 
     if (postsToShow.length === 0) {
         blogGrid.innerHTML = `
@@ -131,6 +145,7 @@ function displayBlogPosts() {
 
     // Update pagination
     updatePagination();
+    console.log('Blog posts displayed successfully');
 }
 
 /**
