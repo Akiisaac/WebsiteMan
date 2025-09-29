@@ -1,27 +1,51 @@
-const fs = require('fs').promises;
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
   try {
-    // Path to posts data file (relative to function directory)
-    const postsFilePath = path.join(__dirname, '..', '..', 'data', 'posts.json');
+    // Initialize Supabase client
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_ANON_KEY;
     
-    // Read posts from file
-    let posts = [];
-    try {
-      const fileContent = await fs.readFile(postsFilePath, 'utf8');
-      posts = JSON.parse(fileContent);
-    } catch (error) {
-      if (error.code === 'ENOENT') {
-        // File doesn't exist, return empty array
-        posts = [];
-      } else {
-        throw error;
-      }
+    if (!supabaseUrl || !supabaseKey) {
+      return {
+        statusCode: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        },
+        body: JSON.stringify({
+          success: false,
+          error: 'Supabase configuration missing'
+        })
+      };
     }
 
-    // Sort posts by date (newest first)
-    posts.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Fetch posts from Supabase
+    const { data: posts, error } = await supabase
+      .from('blog_posts')
+      .select('*')
+      .eq('status', 'published')
+      .order('publish_date')
+
+    if (error) {
+      throw error;
+    }
+
+    // Transform data to match expected format
+    const transformedPosts = posts.map(post => ({
+      id: post.id.toString(),
+      slug: post.slug,
+      title: post.title,
+      summary: post.summary,
+      content: post.content,
+      thumbnail: post.thumbnail,
+      externalLink: post.external_link,
+      publishDate: post.publish_date,
+      tags: post.tags || [],
+      status: post.status
+    }));
 
     return {
       statusCode: 200,
@@ -33,8 +57,8 @@ exports.handler = async (event, context) => {
       },
       body: JSON.stringify({
         success: true,
-        posts: posts,
-        count: posts.length
+        posts: transformedPosts,
+        count: transformedPosts.length
       })
     };
 

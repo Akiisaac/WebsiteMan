@@ -1,5 +1,4 @@
-const fs = require('fs').promises;
-const path = require('path');
+const { createClient } = require('@supabase/supabase-js');
 
 exports.handler = async (event, context) => {
   // Only allow POST requests
@@ -63,25 +62,62 @@ exports.handler = async (event, context) => {
       status: 'published'
     };
 
-    // Read existing posts
-    const postsFilePath = path.join(__dirname, '..', '..', 'data', 'posts.json');
-    let posts = [];
+    // Initialize Supabase client
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
     
-    try {
-      const fileContent = await fs.readFile(postsFilePath, 'utf8');
-      posts = JSON.parse(fileContent);
-    } catch (error) {
-      if (error.code !== 'ENOENT') {
-        throw error;
-      }
+    if (!supabaseUrl || !supabaseKey) {
+      return {
+        statusCode: 500,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Headers': 'Content-Type',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE'
+        },
+        body: JSON.stringify({
+          success: false,
+          error: 'Supabase configuration missing'
+        })
+      };
     }
 
-    // Add new post
-    posts.unshift(post); // Add to beginning of array
+    const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Note: Netlify Functions run in read-only environment
-    // For now, we'll return the updated posts array
-    // In a real implementation, this would write to a database
+    // Insert post into Supabase
+    const { data, error } = await supabase
+      .from('blog_posts')
+      .insert([{
+        slug: slug,
+        title: newPost.title,
+        summary: newPost.summary,
+        content: newPost.content,
+        thumbnail: newPost.thumbnail || '',
+        external_link: newPost.externalLink || '',
+        publish_date: newPost.publishDate || new Date().toISOString(),
+        tags: newPost.tags || [],
+        status: 'published'
+      }])
+      .select()
+      .single();
+
+    if (error) {
+      throw error;
+    }
+
+    // Transform response data
+    const createdPost = {
+      id: data.id.toString(),
+      slug: data.slug,
+      title: data.title,
+      summary: data.summary,
+      content: data.content,
+      thumbnail: data.thumbnail,
+      externalLink: data.external_link,
+      publishDate: data.publish_date,
+      tags: data.tags || [],
+      status: data.status
+    };
 
     return {
       statusCode: 201,
@@ -93,7 +129,7 @@ exports.handler = async (event, context) => {
       },
       body: JSON.stringify({
         success: true,
-        post: post,
+        post: createdPost,
         message: 'Post created successfully'
       })
     };
