@@ -102,6 +102,12 @@ class BlogPostManager {
                                 <div class="card-content">
                                     <div class="form-group">
                                         <label for="post-thumbnail">Thumbnail Image</label>
+                                        ${isEditing && editPost.thumbnail ? `
+                                            <div class="current-thumbnail">
+                                                <img src="${editPost.thumbnail}" alt="Current thumbnail" style="max-width: 200px; margin: 10px 0;">
+                                                <div>Current thumbnail (leave empty to keep)</div>
+                                            </div>
+                                        ` : ''}
                                         <input type="file" id="post-thumbnail" name="thumbnail" accept="image/*">
                                         <small class="form-help">Main image displayed on blog menu</small>
                                     </div>
@@ -527,7 +533,7 @@ class BlogPostManager {
     createPostCard(post) {
         const statusClass = 'status-published';
         const statusText = 'Published';
-        const date = new Date(post.date).toLocaleDateString();
+        const date = new Date(post.publishDate).toLocaleDateString();
         
         return `
             <div class="post-card">
@@ -630,7 +636,7 @@ class BlogPostManager {
     createAdminPostCard(post) {
         const statusClass = 'status-published';
         const statusText = 'Published';
-        const date = new Date(post.date).toLocaleDateString();
+        const date = new Date(post.publishDate).toLocaleDateString();
         
         return `
             <div class="admin-post-card">
@@ -706,6 +712,7 @@ class BlogPostManager {
                 publicationDate: post.publishDate?.split('T')[0] || '',
                 tags: post.tags?.join(', ') || '',
                 externalLink: post.externalLink || '',
+                thumbnail: post.thumbnail || '',
                 slug: post.slug
             };
             this.showCreateForm(formattedPost);
