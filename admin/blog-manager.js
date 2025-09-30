@@ -365,7 +365,7 @@ class BlogPostManager {
             if (this.isEditing) {
                 console.log('Editing post with ID:', this.currentPost.id);
                 // Update existing post
-                    response = await fetch(`https://mustapha-suleiman222.vercel.app/api/update-post?id=${this.currentPost.id}`, {
+                    response = await fetch(`https://junior-suleiman.vercel.app/api/update-post?id=${this.currentPost.id}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
@@ -383,7 +383,7 @@ class BlogPostManager {
                 });
             } else {
                 // Create new post
-                    response = await fetch('https://mustapha-suleiman222.vercel.app/api/create-post', {
+                    response = await fetch('https://junior-suleiman.vercel.app/api/create-post', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -559,7 +559,7 @@ class BlogPostManager {
     async getAllPosts() {
         try {
             console.log('Admin: Fetching posts from API...');
-            const response = await fetch('https://mustapha-suleiman222.vercel.app/api/get-posts');
+            const response = await fetch('https://junior-suleiman.vercel.app/api/get-posts');
             console.log('Admin: API response status:', response.status);
             const result = await response.json();
             console.log('Admin: API response data:', result);
@@ -686,7 +686,7 @@ class BlogPostManager {
 
     async loadThumbnail(postId, imgElement) {
         try {
-            const response = await fetch(`https://mustapha-suleiman222.vercel.app/api/get-thumbnail?id=${postId}`);
+            const response = await fetch(`https://junior-suleiman.vercel.app/api/get-thumbnail?id=${postId}`);
             const result = await response.json();
             
             if (result.success && result.thumbnail) {
@@ -703,7 +703,7 @@ class BlogPostManager {
         if (post) {
             if (confirm(`Are you sure you want to delete "${post.title}"?`)) {
                 try {
-                    const response = await fetch(`https://mustapha-suleiman222.vercel.app/api/delete-post?id=${postId}`, {
+                    const response = await fetch(`https://junior-suleiman.vercel.app/api/delete-post?id=${postId}`, {
                         method: 'DELETE'
                     });
                     const result = await response.json();

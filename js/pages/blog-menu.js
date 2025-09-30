@@ -32,7 +32,7 @@ async function initializeBlogMenu() {
 async function loadBlogData() {
     try {
         console.log('Fetching blog data from API...');
-        const response = await fetch('https://mustapha-suleiman222.vercel.app/api/get-posts');
+        const response = await fetch('https://junior-suleiman.vercel.app/api/get-posts');
         console.log('API response status:', response.status);
         const result = await response.json();
         console.log('API response data:', result);
@@ -184,7 +184,7 @@ function createBlogCard(post) {
  */
 async function loadThumbnail(postId, imgElement) {
     try {
-        const response = await fetch(`https://mustapha-suleiman222.vercel.app/api/get-thumbnail?id=${postId}`);
+        const response = await fetch(`https://junior-suleiman.vercel.app/api/get-thumbnail?id=${postId}`);
         const result = await response.json();
         
         if (result.success && result.thumbnail) {

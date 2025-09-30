@@ -1,0 +1,31 @@
+GET
+https://mustapha-suleiman222.vercel.app/auth.js
+[HTTP/2 404  114ms]
+
+GET
+https://mustapha-suleiman222.vercel.app/rich-text-editor.js
+[HTTP/2 404  123ms]
+
+GET
+https://mustapha-suleiman222.vercel.app/blog-manager.js
+[HTTP/2 404  121ms]
+
+GET
+https://mustapha-suleiman222.vercel.app/auth.js
+[HTTP/2 404  152ms]
+
+Loading failed for the <script> with source “https://mustapha-suleiman222.vercel.app/auth.js”. admin:733:27
+GET
+https://mustapha-suleiman222.vercel.app/rich-text-editor.js
+[HTTP/2 404  194ms]
+
+Loading failed for the <script> with source “https://mustapha-suleiman222.vercel.app/rich-text-editor.js”. admin:734:39
+GET
+https://mustapha-suleiman222.vercel.app/blog-manager.js
+[HTTP/2 404  196ms]
+
+Loading failed for the <script> with source “https://mustapha-suleiman222.vercel.app/blog-manager.js”. admin:735:35
+GET
+https://mustapha-suleiman222.vercel.app/favicon.ico
+[HTTP/2 404  0ms]
+
